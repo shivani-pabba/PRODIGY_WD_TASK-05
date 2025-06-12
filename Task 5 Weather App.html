@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather App</title>
+  <link rel="shortcut icon" href="assets/cloudy.png" type="image/x-icon" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <script src="https://kit.fontawesome.com/1a48c47b52.js" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@2.0.2/build/global/luxon.min.js" defer></script>
+  <style>
+    :root {
+      --bg: #0e0d0d;
+      --text: #ffffff;
+      --card: #181818;
+      --input: #292727;
+      --input-hover: #312d2d;
+    }
+
+    body.light {
+      --bg: #ffffff;
+      --text: #111111;
+      --card: #f0f0f0;
+      --input: #dddddd;
+      --input-hover: #cccccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+      width: 40%;
+      margin: 4rem auto;
+      border-radius: 10px;
+      box-shadow: -5px 5px 5px #0000002c;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .weather__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    input {
+      border: none;
+      background-color: var(--input);
+      outline: none;
+      padding: 0.5rem 2.5rem;
+      border-radius: 20px;
+      color: var(--text);
+      font: inherit;
+    }
+
+    input::placeholder {
+      color: var(--text);
+    }
+
+    input:hover {
+      background-color: var(--input-hover);
+    }
+
+    .weather__search {
+      position: relative;
+    }
+
+    .weather__search i {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      font-size: 20px;
+      color: var(--text);
+    }
+
+    .weather__units {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+    }
+
+    .weather__units span {
+      cursor: pointer;
+    }
+
+    .weather__body {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .weather__forecast {
+      margin-top: 2rem;
+      font-size: 18px;
+      background: var(--card);
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+    }
+
+    .weather__icon img {
+      width: 100px;
+    }
+
+    .weather__temperature {
+      font-size: 2rem;
+    }
+
+    .weather__minmax {
+      display: flex;
+      justify-content: center;
+    }
+
+    .weather__minmax p {
+      margin: 1rem;
+    }
+
+    .weather__info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .weather__card {
+      display: flex;
+      align-items: center;
+      background: var(--card);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .weather__card i {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+
+    @media (max-width: 1060px) {
+      .container {
+        width: 60%;
+      }
+    }
+
+    @media (max-width: 936px) {
+      .container {
+        width: 90%;
+      }
+      .weather__header {
+        flex-direction: column;
+      }
+      .weather__units {
+        margin-top: 1rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .weather__icon {
+        grid-template-columns: none;
+      }
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <div class="weather__header">
+      <form class="weather__search" method="get">
+        <input type="text" placeholder="Search for a city" class="weather__searchform" />
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </form>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="weather__units">
+          <span class="unit__celsisus">&deg;C</span>
+          <span class="unit__fharenheit">&deg;F</span>
+        </div>
+        <div class="theme-toggle" title="Toggle Theme"><i class="fa-solid fa-moon"></i></div>
+      </div>
+    </div>
+
+    <div class="weather__body">
+      <h1 class="weather__city"></h1>
+      <div class="weather__datetime"><p></p></div>
+      <div class="weather__forecast"><p>Cloudy</p></div>
+      <div class="weather__icon">
+        <img src="https://openweathermap.org/img/wn/10d@4x.png" alt="" />
+      </div>
+      <p class="weather__temperature">18&deg;</p>
+      <div class="weather__minmax">
+        <p>Min: 12&deg;</p>
+        <p>Max: 16&deg;</p>
+      </div>
+    </div>
+
+    <div class="weather__info">
+      <div class="weather__card"><i class="fa-solid fa-temperature-three-quarters"></i><div><p>Real Feel</p><p class="weather__realfeel">18&deg;</p></div></div>
+      <div class="weather__card"><i class="fa-solid fa-droplet"></i><div><p>Humidity</p><p class="weather__humidity">78%</p></div></div>
+      <div class="weather__card"><i class="fa-solid fa-wind"></i><div><p>Wind</p><p class="weather__wind">4 m/s</p></div></div>
+      <div class="weather__card"><i class="fa-solid fa-stopwatch"></i><div><p>Pressure</p><p class="weather__pressure">1012 hPa</p></div></div>
+    </div>
+  </div>
+
+  <script>
+    let currentCity = "Warangal";
+    let units = "metric";
+
+    const city = document.querySelector(".weather__city");
+    const datetime = document.querySelector(".weather__datetime");
+    const forecast = document.querySelector(".weather__forecast");
+    const temperature = document.querySelector(".weather__temperature");
+    const icon = document.querySelector(".weather__icon");
+    const minmax = document.querySelector(".weather__minmax");
+    const realfeel = document.querySelector(".weather__realfeel");
+    const humidity = document.querySelector(".weather__humidity");
+    const wind = document.querySelector(".weather__wind");
+    const pressure = document.querySelector(".weather__pressure");
+
+    document.querySelector(".weather__search").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const search = document.querySelector(".weather__searchform");
+      currentCity = search.value;
+      getWeather();
+      search.value = "";
+    });
+
+    document.querySelector(".unit__celsisus").addEventListener("click", () => {
+      if (units !== "metric") {
+        units = "metric";
+        getWeather();
+      }
+    });
+
+    document.querySelector(".unit__fharenheit").addEventListener("click", () => {
+      if (units !== "imperial") {
+        units = "imperial";
+        getWeather();
+      }
+    });
+
+    document.querySelector(".theme-toggle").addEventListener("click", () => {
+      document.body.classList.toggle("light");
+    });
+
+    function convertCountryCode(code) {
+      const region = new Intl.DisplayNames(["en"], { type: "region" });
+      return region.of(code);
+    }
+
+    function convertTimestamp(ts, tz) {
+      return luxon.DateTime.fromSeconds(ts).plus({ seconds: tz }).toFormat("cccc, dd LLL yyyy, hh:mm a");
+    }
+
+    function getWeather() {
+      const API_KEY = "a9710af3365e34d185ac9b8a36568aa2";
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${API_KEY}&units=${units}`)
+        .then((res) => res.json())
+        .then((data) => {
+          city.innerHTML = `${data.name}, ${convertCountryCode(data.sys.country)}`;
+          datetime.innerHTML = convertTimestamp(data.dt, data.timezone);
+          forecast.innerHTML = `<p>${data.weather[0].main}</p>`;
+          icon.innerHTML = `<img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png" alt="">`;
+          temperature.innerHTML = `${data.main.temp.toFixed()}&deg;`;
+          minmax.innerHTML = `<p>Min: ${data.main.temp_min.toFixed()}&deg;</p><p>Max: ${data.main.temp_max.toFixed()}&deg;</p>`;
+          realfeel.innerHTML = `${data.main.feels_like.toFixed()}&deg;`;
+          humidity.innerHTML = `${data.main.humidity}%`;
+          wind.innerHTML = `${data.wind.speed} ${units === "imperial" ? "mph" : "m/s"}`;
+          pressure.innerHTML = `${data.main.pressure} hPa`;
+        })
+        .catch(() => {
+          city.innerHTML = "City not found";
+          datetime.innerHTML = "";
+          forecast.innerHTML = "";
+          icon.innerHTML = "";
+          temperature.innerHTML = "";
+          minmax.innerHTML = "";
+          realfeel.innerHTML = "";
+          humidity.innerHTML = "";
+          wind.innerHTML = "";
+          pressure.innerHTML = "";
+        });
+    }
+
+    window.addEventListener("load", getWeather);
+  </script>
+</body>
+</html>
